@@ -2,6 +2,8 @@
 
 Introduction to Parallel Computing
 
+*Bubble Sort and its Variants using java multithreading*
+
 We would like to rearrange or sorting a given list of n integers values from a file in increasing order 
 we will do this through the use of the simplest sorting algorithm which is bubble sort algorithm. 
 The bubble sort algorithm works by comparing each value in the list with the value next to it, and swapping them if required. 
