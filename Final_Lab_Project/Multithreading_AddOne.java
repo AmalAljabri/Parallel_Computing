@@ -1,3 +1,4 @@
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -28,6 +29,7 @@ public class Multithreading_AddOne {
 
 	public static int THREAD_COUNT = 1000;
 	public static int SUM = 0;
+	public static int chosen_number;
 
 	public static void Serial_AddOne() {
 		int SUM = 0;
@@ -38,6 +40,22 @@ public class Multithreading_AddOne {
 	}
 
 	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("                     Please, choose the appropriate option!");
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("                            The results of Parallel: ");
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("     Click 1: Parallel AddOne With Synchronization Using synchronized Keyword ");
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("            Click 2: Parallel AddOne With Synchronization Using Lock ");
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("     Click 3: Parallel AddOne With Synchronization Using Semaphore --> permit(1) ");
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("      Click ANY NUMBER: Parallel AddOne Parallel AddOne Without Synchronization ");
+		System.out.println("----------------------------------------------------------------------------------------");
+
+		chosen_number = sc.nextInt();
 
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.print("                             Serial AddOne, SUM = ");
@@ -63,16 +81,7 @@ public class Multithreading_AddOne {
 
 		long End_Time_Parallel = System.nanoTime();
 
-		System.out.println("               Parallel AddOne Without Synchronization, SUM = " + SUM);
-		/*
-		 * System.out.
-		 * println("    Parallel AddOne With Synchronization Using synchronized Keyword, SUM = "
-		 * + SUM); /*System.out.
-		 * println("    Parallel AddOne With Synchronization Using Lock, SUM = " + SUM);
-		 * System.out.
-		 * println("    Parallel AddOne With Synchronization Using Semaphore --> permit(1), SUM = "
-		 * + SUM);
-		 */
+		System.out.println("                            Parallel AddOne, SUM = " + SUM);
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.println("                             Number of threads is " + THREAD_COUNT);
 		System.out.println("----------------------------------------------------------------------------------------");
@@ -93,10 +102,16 @@ public class Multithreading_AddOne {
 
 		@Override
 		public void run() {
-			Parallel_AddOne_Without_Synchronization();
-			// Parallel_AddOne_With_Synchronization_Keyword();
-			// Parallel_AddOne_With_Synchronization_Lock();
-			// Parallel_AddOne_With_Synchronization_Semaphore();
+
+			if (chosen_number == 1) {
+				Parallel_AddOne_With_Synchronization_Keyword();
+			} else if (chosen_number == 2) {
+				Parallel_AddOne_With_Synchronization_Lock();
+			} else if (chosen_number == 3) {
+				Parallel_AddOne_With_Synchronization_Semaphore();
+			} else {
+				Parallel_AddOne_Without_Synchronization();
+			}
 		}
 
 		void Parallel_AddOne_Without_Synchronization() {
