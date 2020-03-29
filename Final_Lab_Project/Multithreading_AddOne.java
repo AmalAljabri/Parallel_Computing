@@ -37,20 +37,20 @@ public class Multithreading_AddOne {
 		System.out.println(SUM);
 	}
 
-	static synchronized void Parallel_AddOne_With_Synchronization_Keyword() {
-		SUM = SUM + 1;
-	}
-
 	public static void main(String[] args) {
 
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.print("                             Serial AddOne, SUM = ");
+		long Start_Time_Serial = System.nanoTime();
 		Serial_AddOne();
+		long End_Time_Serial = System.nanoTime();
 		System.out.println("----------------------------------------------------------------------------------------");
-
+		System.out.println("                   Run-Times of Serial Code is " + (End_Time_Serial - Start_Time_Serial)
+				+ " nanoseconds");
+		System.out.println("----------------------------------------------------------------------------------------");
 		ExecutorService executor = Executors.newCachedThreadPool();
 
-		long Start_Time = System.currentTimeMillis();
+		long Start_Time_Parallel = System.nanoTime();
 
 		for (int thread = 0; thread < THREAD_COUNT; thread++) {
 			executor.execute(new Parallel_AddOne(thread));
@@ -61,16 +61,23 @@ public class Multithreading_AddOne {
 		while (!executor.isTerminated()) {
 		}
 
-		long End_Time = System.currentTimeMillis();
+		long End_Time_Parallel = System.nanoTime();
 
-		System.out.println("              Parallel AddOne Without Synchronization, SUM = " + SUM);
-		/*System.out.println("    Parallel AddOne With Synchronization Using synchronized Keyword, SUM = " + SUM);
-		System.out.println("    Parallel AddOne With Synchronization Using Lock, SUM = " + SUM);
-		System.out.println("    Parallel AddOne With Synchronization Using Semaphore --> permit(1), SUM = " + SUM);*/
+		System.out.println("               Parallel AddOne Without Synchronization, SUM = " + SUM);
+		/*
+		 * System.out.
+		 * println("    Parallel AddOne With Synchronization Using synchronized Keyword, SUM = "
+		 * + SUM); /*System.out.
+		 * println("    Parallel AddOne With Synchronization Using Lock, SUM = " + SUM);
+		 * System.out.
+		 * println("    Parallel AddOne With Synchronization Using Semaphore --> permit(1), SUM = "
+		 * + SUM);
+		 */
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.println("                             Number of threads is " + THREAD_COUNT);
 		System.out.println("----------------------------------------------------------------------------------------");
-		System.out.println("                            Run-Times is " + (End_Time - Start_Time) + " milliseconds");
+		System.out.println("                 Run-Times of Parallel Code is " + (End_Time_Parallel - Start_Time_Parallel)
+				+ " nanoseconds");
 		System.out.println("----------------------------------------------------------------------------------------");
 	}
 
@@ -87,22 +94,27 @@ public class Multithreading_AddOne {
 		@Override
 		public void run() {
 			Parallel_AddOne_Without_Synchronization();
-			//Parallel_AddOne_With_Synchronization_Keyword();
-			//Parallel_AddOne_With_Synchronization_Lock();
-			//Parallel_AddOne_With_Synchronization_Semaphore();
+			// Parallel_AddOne_With_Synchronization_Keyword();
+			// Parallel_AddOne_With_Synchronization_Lock();
+			// Parallel_AddOne_With_Synchronization_Semaphore();
 		}
 
 		void Parallel_AddOne_Without_Synchronization() {
 			SUM = SUM + 1;
 		}
 
+		static synchronized void Parallel_AddOne_With_Synchronization_Keyword() {
+			SUM = SUM + 1;
+		}
+
 		void Parallel_AddOne_With_Synchronization_Lock() {
 			lock.lock();
 			try {
-			SUM = SUM + 1;
+				SUM = SUM + 1;
 			} finally {
-			lock.unlock();
-		}}
+				lock.unlock();
+			}
+		}
 
 		void Parallel_AddOne_With_Synchronization_Semaphore() {
 			try {
