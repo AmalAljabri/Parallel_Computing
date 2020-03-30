@@ -52,20 +52,12 @@ public class Multithreading_AddOne {
 		System.out.println("----------------------------------------------------------------------------------------");
 		System.out.println("     Click 3: Parallel AddOne With Synchronization Using Semaphore --> permit(1) ");
 		System.out.println("----------------------------------------------------------------------------------------");
-		System.out.println("      Click ANY NUMBER: Parallel AddOne Parallel AddOne Without Synchronization ");
+		System.out.println("            Click ANY NUMBER: Parallel AddOne Without Synchronization ");
 		System.out.println("----------------------------------------------------------------------------------------");
 
 		chosen_number = sc.nextInt();
 
-		System.out.println("----------------------------------------------------------------------------------------");
-		System.out.print("                             Serial AddOne, SUM = ");
-		long Start_Time_Serial = System.nanoTime();
-		Serial_AddOne();
-		long End_Time_Serial = System.nanoTime();
-		System.out.println("----------------------------------------------------------------------------------------");
-		System.out.println("                   Run-Times of Serial Code is " + (End_Time_Serial - Start_Time_Serial)
-				+ " nanoseconds");
-		System.out.println("----------------------------------------------------------------------------------------");
+		
 		ExecutorService executor = Executors.newCachedThreadPool();
 
 		long Start_Time_Parallel = System.nanoTime();
@@ -80,6 +72,15 @@ public class Multithreading_AddOne {
 		}
 
 		long End_Time_Parallel = System.nanoTime();
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.print("                             Serial AddOne, SUM = ");
+		long Start_Time_Serial = System.nanoTime();
+		Serial_AddOne();
+		long End_Time_Serial = System.nanoTime();
+		System.out.println("----------------------------------------------------------------------------------------");
+		System.out.println("                   Run-Times of Serial Code is " + (End_Time_Serial - Start_Time_Serial)
+				+ " nanoseconds");
+		System.out.println("----------------------------------------------------------------------------------------");
 
 		System.out.println("                            Parallel AddOne, SUM = " + SUM);
 		System.out.println("----------------------------------------------------------------------------------------");
