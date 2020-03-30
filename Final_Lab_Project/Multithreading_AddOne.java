@@ -22,6 +22,17 @@ import java.util.concurrent.locks.ReentrantLock;
           
           
          **********************************************************************
+         
+        In this code, a menu will appear for the user at the beginning when running the program, 
+        through which he chooses how to implement the Parallel_AddOne 
+        without synchronization or with synchronization in three different techniques. The menu is as follows:
+               •	When click 1: Parallel_AddOne with synchronization using synchronized keyword. 
+               •	When click 2: Parallel_AddOne with synchronization using lock.
+               •	When click 3: Parallel_AddOne with synchronization using semaphore--> permit(1).
+               •	When Click any number: Parallel_AddOne without synchronization.
+               
+         **********************************************************************
+
 
 */
 

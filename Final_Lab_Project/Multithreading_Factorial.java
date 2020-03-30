@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
                                         Name: Amal Aljabri
                                            Id: 3550343
 
-                *** program to compute a factorial of a given number in parallel and serial***
+             *** program to compute a factorial of a given number in parallel and serial***
 
 
 */
