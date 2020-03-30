@@ -6,13 +6,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /*
+     **********************************************************************************
  
                                  Name: Amal Aljabri
                                     Id: 3550343
 
-*** program that launches 1,000 threads. Each thread adds 1 to a variable sum that initially is 0. ***
+                          *** program that launches 1,000 threads. 
+                   Each thread adds 1 to a variable sum that initially is 0. ***
 
-          *******************************************************************
+     **********************************************************************************
           
                                   Serial AddOne.
                      Parallel AddOne Without Synchronization.
@@ -21,17 +23,18 @@ import java.util.concurrent.locks.ReentrantLock;
           Parallel AddOne With Synchronization Using Semaphore --> permit(1).
           
           
-         **********************************************************************
+    **********************************************************************************
          
-        In this code, a menu will appear for the user at the beginning when running the program, 
-        through which he chooses how to implement the Parallel_AddOne 
-        without synchronization or with synchronization in three different techniques. The menu is as follows:
-               •	When click 1: Parallel_AddOne with synchronization using synchronized keyword. 
-               •	When click 2: Parallel_AddOne with synchronization using lock.
-               •	When click 3: Parallel_AddOne with synchronization using semaphore--> permit(1).
-               •	When Click any number: Parallel_AddOne without synchronization.
+          In this code, a menu will appear for the user at the beginning when 
+          running the program, through which he chooses how to implement the 
+          Parallel_AddOne without synchronization or with synchronization in 
+                  three different techniques. The menu is as follows:
+      • When click 1: Parallel_AddOne with synchronization using synchronized keyword. 
+      •	When click 2: Parallel_AddOne with synchronization using lock.
+      • When click 3: Parallel_AddOne with synchronization using semaphore--> permit(1).
+      •	When Click any number: Parallel_AddOne without synchronization.
                
-         **********************************************************************
+      **********************************************************************************
 
 
 */
