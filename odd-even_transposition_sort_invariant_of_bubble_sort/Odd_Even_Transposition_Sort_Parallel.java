@@ -75,9 +75,9 @@ public class Odd_Even_Transposition_Sort_Parallel {
 		int THREAD_RANK;
 		int my_output[];
 
-		Parallel_OddEven_Variation_of_bubbleSort(int THREAD_RANK, int sd[]) {
+		Parallel_OddEven_Variation_of_bubbleSort(int THREAD_RANK, int my_output[]) {
 			this.THREAD_RANK = THREAD_RANK;
-			this.my_output = sd;
+			this.my_output = my_output;
 		}
 
 		@Override
