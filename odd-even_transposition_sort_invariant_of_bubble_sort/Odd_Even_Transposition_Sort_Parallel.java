@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Odd_Even_Transposition_Sort_Parallel {
-	public static int THREAD_COUNT = 3;
+	public static int THREAD_COUNT = 4;
 	public static int[] myList;
 
 	public static void readFiles() throws FileNotFoundException {
@@ -30,11 +30,14 @@ public class Odd_Even_Transposition_Sort_Parallel {
 	public static void main(String[] args) throws FileNotFoundException {
 		readFiles();
 		int n = myList.length;
-		System.out.println("myList size" + n);
-		System.out.println("myList before bubble sort algorithm");
+		System.out.println("* myList size = " + n);
+		System.out.println();
+		System.out.println("* myList before Parallel_OddEven_Variation_of_bubbleSort");
+		System.out.println();
 		for (int i = 0; i < n; i++) {
 			System.out.print(myList[i] + " ");
 		}
+		System.out.println();
 		System.out.println();
 
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -42,7 +45,7 @@ public class Odd_Even_Transposition_Sort_Parallel {
 		long Start_Time = System.nanoTime();
 
 		for (int thread = 0; thread < THREAD_COUNT; thread++) {
-			executor.execute(new Parallel_OddEven_Variation_of_bubbleSort(thread));
+			executor.execute(new Parallel_OddEven_Variation_of_bubbleSort(thread, myList));
 		}
 
 		executor.shutdown();
@@ -51,15 +54,18 @@ public class Odd_Even_Transposition_Sort_Parallel {
 		}
 
 		long End_Time = System.nanoTime();
+		System.out.println("* myList after Parallel_OddEven_Variation_of_bubbleSort");
+		System.out.println();
 		for (int i = 0; i < n; i++) {
 			System.out.print(myList[i] + " ");
 		}
+
 		System.out.println();
-		System.out.println("-------------------------------------------------");
-		System.out.println("  Number of threads is " + THREAD_COUNT);
-		System.out.println("-------------------------------------------------");
-		System.out.println("  Run-Times is " + (End_Time - Start_Time) + " nanoseconds");
-		System.out.println("-------------------------------------------------");
+		System.out.println();
+		System.out.println("* Number of threads is " + THREAD_COUNT);
+		System.out.println();
+		System.out.println("* Run-Times is " + (End_Time - Start_Time) + " nanoseconds");
+		System.out.println();
 		System.out.println();
 
 	}
@@ -69,65 +75,62 @@ public class Odd_Even_Transposition_Sort_Parallel {
 		int THREAD_RANK;
 		int my_output[];
 
-		Parallel_OddEven_Variation_of_bubbleSort(int THREAD_RANK) {
+		Parallel_OddEven_Variation_of_bubbleSort(int THREAD_RANK, int sd[]) {
 			this.THREAD_RANK = THREAD_RANK;
+			this.my_output = sd;
 		}
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			Parallel(THREAD_RANK);
-
-		}
-
-		void Parallel(int THREAD_RANK) {
-
 			lock.lock();
-			int local_n = (myList.length + THREAD_COUNT - 1) / THREAD_COUNT;
-			int first = local_n * THREAD_RANK;
-			int last = Math.min(first + local_n, myList.length);
-			my_output = new int[last];
-			System.out.println("THREAD_RANK " + THREAD_RANK);
-			for (int i = first; i < last; i++) {
+			// TODO Auto-generated method stub
+			int start = 0;
+			int end = 0;
+			int temporary;
 
-				my_output[i] = myList[i];
-				// OddEven_Variation_of_bubbleSort(my_output,my_output.length );
+			boolean sorted = false;
 
-				System.out.println(my_output[i]);
+			int part = my_output.length / THREAD_COUNT;
+			start = THREAD_RANK * part;
+			// System.out.println("start =" + start);
+			if (THREAD_RANK != THREAD_COUNT - 1) {
+				end = start + part;
+				// System.out.println(end);
 
+			} else {
+				end = my_output.length - 2;
 			}
-			//
-			System.out.println();
-			lock.unlock();
+			// System.out.println("THREAD_RANK " + THREAD_RANK);
 
-		}
+			while (!sorted) {
+				sorted = true;
 
-		public static int[] OddEven_Variation_of_bubbleSort(int[] myList, int n) {
-			int num = n;
-			int temporary = 0;
-			for (int i = 0; i <= n; i++) {
-				if (i % 2 == 0) {
-					for (int j = 1; j < n; j += 2) {
-						if (myList[j - 1] > myList[j]) {
-							temporary = myList[j - 1];
-							myList[j - 1] = myList[j];
-							myList[j] = temporary;
-						}
+				for (int i = 1; i <= end; i = i + 2) {
+					if (my_output[i] > my_output[i + 1]) {
+						temporary = my_output[i];
+						my_output[i] = my_output[i + 1];
+						my_output[i + 1] = temporary;
+						my_output[i] = my_output[i];
+						my_output[i + 1] = my_output[i + 1];
+						sorted = false;
 					}
+				}
 
-				} else {
-					for (int j = 1; j < n - 1; j += 2) {
-						if (myList[j] > myList[j + 1]) {
-							temporary = myList[j + 1];
-							myList[j + 1] = myList[j];
-							myList[j] = temporary;
-						}
+				for (int i = 0; i <= end; i = i + 2) {
+					if (my_output[i] > my_output[i + 1]) {
+						temporary = my_output[i];
+						my_output[i] = my_output[i + 1];
+						my_output[i + 1] = temporary;
+						my_output[i] = my_output[i];
+						my_output[i + 1] = my_output[i + 1];
+						sorted = false;
 					}
-
 				}
 			}
-			return myList;
+
+			lock.unlock();
 		}
+
 	}
 
 }
