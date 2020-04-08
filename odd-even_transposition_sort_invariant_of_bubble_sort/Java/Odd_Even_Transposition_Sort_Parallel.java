@@ -4,7 +4,6 @@ package project;
  *     through which he chooses the appropriate option. The menu is as follows:
  *     
          •	When click 1: will be arranged myList using Serial Odd-Even Variation to Bubble Sort. 
-         
          •	When click 2 will be arranged myList using Parallel Odd-Even Variation to Bubble Sort.*/
 
 import java.io.File;
