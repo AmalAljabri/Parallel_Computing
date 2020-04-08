@@ -1,78 +1,75 @@
+
+//    Program to implement serial and parallel Odd-Even Sort using openmp
+/*    In this code, a menu will appear for the user at the beginning when running the program,
+ *     through which he chooses the appropriate option. The menu is as follows:
+ *
+		 •	When click 1: will be arranged myList using Serial Odd-Even Variation to Bubble Sort.
+		 •	When click 2 will be arranged myList using Parallel Odd-Even Variation to Bubble Sort.*/
+
 #include <iostream>
 #include <fstream>
 #include <omp.h>
-int threadNumber = 4;
-int my_rank = omp_get_thread_num();
+#include <stdio.h>
 using namespace std;
-// A C++ Program to implement serial and parallel Odd-Even Sort using openmp
+int chosen_number;
+int THREAD_COUNT = 16;
+int THREAD_RANK;
+double Start_Time_Serial;
+double End_Time_Serial;
+double Run_Time_Serial;
+double Start_Time_Parallel;
+double End_Time_Parallel;
+double Run_Time_Parallel;
 
-// A function to serial Odd Even sort algorithm 
-void Serial_oddEvenSort(int arr[], int n)
-{
-	bool isSorted = false; 
+void Serial_oddEvenSort(int myList[], int n);// A function to serial Odd-Even sort algorithm 
+void print_myList(int arr[], int n);// A function to print myList of size n 
+void swap(int i, int j);// A function to swap two element in myList
+void Parrallel_oddEvenSort(int myList[], int n);// A function to parallel Odd-Even sort algorithm using #pragma parallel in OpenMP 
 
-	while (!isSorted)
+
+/*-------------------------------------------------------------------
+	 * Function:  Serial_oddEvenSort
+	 * Purpose: A function to serial Odd-Even sort algorithm 
+*-------------------------------------------------------------------*/
+void Serial_oddEvenSort(int myList[], int n) {
+	for (int phase = 0; phase < n; phase++)
 	{
-		isSorted = true;
-
-		for (int i = 1; i <= n - 2; i = i + 2)
+		int temp;
+		if (phase % 2 == 0)
 		{
-			if (arr[i] > arr[i + 1])
+			for (int i= 1; i < n; i += 2)
 			{
-				swap(arr[i], arr[i + 1]);
-				isSorted = false;
+				if (myList[i - 1] > myList[i])
+				{
+					temp = myList[i];
+					myList[i] = myList[i - 1];
+					myList[i - 1] = temp;
+					//swap(myList[i - 1], myList[i]);
+				}
 			}
 		}
+		else {
 
-		for (int i = 0; i <= n - 2; i = i + 2)
-		{
-			if (arr[i] > arr[i + 1])
+			for (int i = 1; i < n - 1; i += 2)
 			{
-				swap(arr[i], arr[i + 1]);
-				isSorted = false;
+				if (myList[i] > myList[i + 1])
+				{
+					temp = myList[i];
+					myList[i] = myList[i + 1];
+					myList[i + 1] = temp;
+					//swap(myList[i], myList[i + 1]);
+				}
 			}
 		}
 	}
-
-	return;
 }
 
-// A function to parallel Odd Even sort algorithm 
-void Parrallel_oddEvenSort(int arr[], int n)
-{
-	int phase, i, temp;
-#pragma omp parallel num_threads(threadNumber) default(none) shared(arr,n) private(i,temp,phase)
-	for (phase = 0; phase < n; ++phase)
-	{
-		
-		if (phase % 2 == 0) //even phase
-		{
-#pragma omp for
-			for (i = 1; i < n; i += 2)
-				if (arr[i - 1] > arr[i])
-				{
 
-					temp = arr[i];
-					arr[i] = arr[i - 1];
-					arr[i - 1] = temp;
-				}
-		
-		}
-		else //odd phase
-		{
-#pragma omp for
-			for (i = 1; i < n - 1; i += 2)
-				if (arr[i] > arr[i + 1])
-				{
-					temp = arr[i];
-					arr[i] = arr[i + 1];
-					arr[i + 1] = temp;
-				}
-		}
-	}
-}
-// A function ot print an array of size n 
-void printArray(int arr[], int n)
+/*-------------------------------------------------------------------
+	 * Function: print_myList
+	 * Purpose:  A function to print myList of size n 
+*-------------------------------------------------------------------*/
+void print_myList(int arr[], int n)
 {
 	for (int i = 0; i < n; i++)
 		cout << arr[i] << " ";
@@ -80,9 +77,61 @@ void printArray(int arr[], int n)
 }
 
 
+/*-------------------------------------------------------------------
+	 * Function: swap
+	 * Purpose:  A function to swap two element in myList
+*-------------------------------------------------------------------*/
+void swap(int i, int j) {
+
+	int temp = i;
+	i = j;
+	j = temp;
+
+}
+
+/*-------------------------------------------------------------------
+	 * Function: Parrallel_oddEvenSort
+	 * Purpose:  A function to parallel Odd-Even sort algorithm using #pragma parallel in OpenMP 
+*-------------------------------------------------------------------*/
+void Parrallel_oddEvenSort(int myList[], int n)
+{
+	int phase, i, temp;
+#pragma omp parallel num_threads(THREAD_COUNT) shared(myList,n) private(i,phase,temp)
+	//printf("\n* rank: %d\n", omp_get_thread_num());
+	for (phase = 0; phase < n; phase++)
+	{
+		if (phase % 2 == 0)
+		{
+#pragma omp for
+			for (i = 1; i < n; i += 2)
+			if (myList[i - 1] > myList[i])
+			{
+				temp = myList[i];
+				myList[i] = myList[i - 1];
+				myList[i - 1] = temp;
+				//swap(myList[i - 1], myList[i]);
+			}
+		}
+		else
+		{
+#pragma omp for
+			for (i = 1; i < n - 1; i += 2)
+			if (myList[i] > myList[i + 1])
+			{
+				temp = myList[i];
+				myList[i] = myList[i + 1];
+				myList[i + 1] = temp;
+				//swap(myList[i], myList[i + 1]);
+			}
+		}
+
+	}
+}
+
 int main() {
 
-	int myList[1000];
+	int myList[224000] ;
+	int length_myList = (sizeof(myList) / sizeof(*myList));
 
 	ifstream File;
 	File.open("mylist.txt");
@@ -92,24 +141,40 @@ int main() {
 		n++;
 	}
 	File.close();
+	
 
-	printArray(myList, 1000);
-	printf("Thread number: %d\n", threadNumber);
+	printf("Please, choose the appropriate option!\n");
+	printf("Click on number 1: will be arranged myList using Serial Odd-Even Variation to Bubble Sort!\n");
+	printf("Click on number 2: will be arranged myList using Parallel Odd-Even Variation to Bubble Sort!\n");
+	scanf_s("%d", &chosen_number);
+	printf("* myList Befor Sort: ");
+	print_myList(myList, length_myList);
+	printf("\n* Size of myList: %d\n", length_myList);
+	if (chosen_number == 1) {
 
-	//double Start_Time_Serial = omp_get_wtime();
-	//Serial_oddEvenSort(arr, 1000);
-	//double End_Time_Serial = omp_get_wtime();
-	//printf("Sorting with the Serial Algorithm\n");
-	//double Run_Time_Serial = End_Time_Serial - Start_Time_Serial;
-	//printArray(arr, 11);
-	//printf("Run_Time_Serial: %lf (s)\n", Run_Time_Serial);
+		Start_Time_Serial = omp_get_wtime();
+		Serial_oddEvenSort(myList, length_myList);
+		End_Time_Serial = omp_get_wtime();
+		printf("\n* Sorting with the Serial Algorithm: ");
+		Run_Time_Serial = End_Time_Serial - Start_Time_Serial;
+		print_myList(myList, length_myList);
+		printf("\n* Run-Times is: %lf (s)\n", Run_Time_Serial);
+	}
+	else if (chosen_number == 2) {
 
-	double  Start_Time_Parallel = omp_get_wtime();
-	Parrallel_oddEvenSort(myList, 1000);
-	double  End_Time_Parallel = omp_get_wtime();
-	double Run_Time_Parallel = End_Time_Parallel - Start_Time_Parallel;
-	printf("Sorting with the Parallel Algorithm\n");
-	printArray(myList, 1000);
-	printf("Run_Time_Parallel: %lf (s)\n", Run_Time_Parallel);
+		printf("\n* Number of Threads: %d\n", THREAD_COUNT);
+		Start_Time_Parallel = omp_get_wtime();
+		Parrallel_oddEvenSort(myList, length_myList);
+		End_Time_Parallel = omp_get_wtime();
+		Run_Time_Parallel = End_Time_Parallel - Start_Time_Parallel;
+		printf("\n* Sorting with the Parallel Algorithm: ");
+		print_myList(myList, length_myList);
+		printf("\n* Run-Times is: %lf (s)\n", Run_Time_Parallel);
+	}
+	else {
+		printf("* Wrong Choice!");
+
+	}
+
 	return 0;
 }
